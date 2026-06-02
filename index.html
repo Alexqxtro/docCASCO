@@ -38,7 +38,6 @@
 <body>
 
     <div class="container">
-        <!-- Antet Aplicatie -->
         <div class="header">
             <h1>Intelligent Document Processing (IDP)</h1>
             <p>Sistem automat de analiză și validare pentru deschiderea dosarelor de daună CASCO</p>
@@ -46,7 +45,6 @@
         </div>
 
         <div class="grid">
-            <!-- Zona din Stanga -->
             <div>
                 <div class="upload-section">
                     <label class="file-input-wrapper">
@@ -56,14 +54,13 @@
                     <div id="fileListDisplay" class="file-list"></div>
                 </div>
 
+                <!-- CORECTARE ID BUTON AICI -->
                 <button id="btnAnalyze" class="btn">Pasul 2: Analizează Documentele cu GPT-4o Real</button>
 
-                <!-- Status de incarcare -->
                 <div id="loadingOverlay" class="loading">
                     🔄 AI analizează documentele tale prin serverul local... Vă rugăm așteptați.
                 </div>
 
-                <!-- Tabel Date Extrase -->
                 <div id="resultsContainer" class="results-box">
                     <table>
                         <thead>
@@ -79,7 +76,6 @@
                 </div>
             </div>
 
-            <!-- Zona din Dreapta: Checklist fix în text (Hardcoded) -->
             <div>
                 <div class="checklist">
                     <h3>Checklist Dosar Daună</h3>
@@ -151,3 +147,8 @@
 
         btnAnalyze.addEventListener('click', async () => {
             if (fileInput.files.length === 0) { 
+                alert('Te rog selectează cel puțin un fișier pentru analiză!'); 
+                return; 
+            }
+            
+            loadingOverlay.style.display = 'block';
