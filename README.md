@@ -13,8 +13,11 @@
         .badge { display: inline-block; background: #dcfce7; color: #15803d; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold; margin-top: 10px; border: 1px solid #bbf7d0; }
         .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
         @media(max-width: 900px) { .grid { grid-template-columns: 1fr; } }
-        .upload-box { border: 2px dashed #2563eb; padding: 30px; border-radius: 10px; text-align: center; background: #f8fafc; cursor: pointer; margin-bottom: 20px; }
-        .upload-box p { margin: 10px 0 0 0; font-size: 14px; font-weight: 500; color: #475569; }
+        
+        .upload-section { background: #f8fafc; border: 2px solid #e2e8f0; padding: 25px; border-radius: 10px; margin-bottom: 20px; }
+        .file-input-wrapper { display: block; margin-bottom: 15px; }
+        .file-list { margin-top: 15px; background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; font-size: 13px; color: #475569; display: none; }
+        
         .btn { width: 100%; background: #2563eb; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; transition: background 0.2s; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2); }
         .btn:hover { background: #1d4ed8; }
         .loading { display: none; text-align: center; padding: 20px; background: #eff6ff; color: #1d4ed8; border-radius: 8px; font-weight: bold; margin: 15px 0; border: 1px solid #bfdbfe; font-size: 16px; }
@@ -24,7 +27,8 @@
         td { padding: 12px; border-bottom: 1px solid #e5e7eb; background: white; }
         .text-valid { color: #16a34a; font-weight: bold; }
         .text-invalid { color: #dc2626; font-weight: bold; }
-        .checklist { background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; }
+        
+        .checklist { background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; min-height: 300px; }
         .checklist h3 { margin-top: 0; font-size: 16px; color: #1e3a8a; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 15px; }
         .check-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; background: white; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: #475569; }
         .item-valid { background-color: #f0fdf4; border-color: #bbf7d0; color: #166534; }
@@ -34,6 +38,7 @@
 <body>
 
     <div class="container">
+        <!-- Antet Aplicatie -->
         <div class="header">
             <h1>Intelligent Document Processing (IDP)</h1>
             <p>Sistem automat de analiză și validare pentru deschiderea dosarelor de daună CASCO</p>
@@ -41,19 +46,24 @@
         </div>
 
         <div class="grid">
+            <!-- Zona din Stanga -->
             <div>
-                <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-                    <input type="file" id="fileInput" multiple accept="image/*,.pdf" style="margin: 0 auto; display: block;">
-                    <p>Trage fișierele aici sau fă click pentru a răsfoi computerul</p>
-                    <span style="font-size: 11px; color: #94a3b8;">Acceptă imagini (PNG, JPG, JPEG) și documente PDF</span>
+                <div class="upload-section">
+                    <label class="file-input-wrapper">
+                        <strong style="display:block; margin-bottom:8px; color:#1e3a8a;">Pasul 1: Selectează folderul ZIP sau fișierele</strong>
+                        <input type="file" id="fileInput" multiple accept="image/*,.pdf,.zip" style="font-size:14px; cursor:pointer;">
+                    </label>
+                    <div id="fileListDisplay" class="file-list"></div>
                 </div>
 
-                <button id="btnAnalyze" class="btn">Analizează Documentele cu GPT-4o Real</button>
+                <button id="btnAnalyze" class="btn">Pasul 2: Analizează Documentele cu GPT-4o Real</button>
 
+                <!-- Status de incarcare -->
                 <div id="loadingOverlay" class="loading">
                     🔄 AI analizează documentele tale prin serverul local... Vă rugăm așteptați.
                 </div>
 
+                <!-- Tabel Date Extrase -->
                 <div id="resultsContainer" class="results-box">
                     <table>
                         <thead>
@@ -69,10 +79,23 @@
                 </div>
             </div>
 
+            <!-- Zona din Dreapta: Checklist fix în text (Hardcoded) -->
             <div>
                 <div class="checklist">
                     <h3>Checklist Dosar Daună</h3>
-                    <div id="checklistItems"></div>
+                    <div id="checklistItems">
+                        <div id="check-buletin" class="check-item"><span>Buletin / Carte de identitate</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-permis_conducere" class="check-item"><span>Permis de conducere</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-talon_auto" class="check-item"><span>Talon auto (Certificat)</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-polita_casco" class="check-item"><span>Poliță CASCO</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-contract_cesiune" class="check-item"><span>Contract cesiune</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-contract_mandat" class="check-item"><span>Contract mandat</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-imputernicire_proprietar" class="check-item"><span>Împuternicire proprietar</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-fotografie_parbriz_avariat" class="check-item"><span>Fotografii parbriz avariat</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-foto_cod_parbriz_avariat" class="check-item"><span>Foto cod parbriz avariat</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-foto_serie_vin" class="check-item"><span>Foto serie VIN (șasiu)</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-foto_parbriz_inlocuit_cu_cod_nou" class="check-item"><span>Foto parbriz înlocuit cod nou</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -94,79 +117,37 @@
         };
 
         const fileInput = document.getElementById('fileInput');
+        const fileListDisplay = document.getElementById('fileListDisplay');
         const btnAnalyze = document.getElementById('btnAnalyze');
         const loadingOverlay = document.getElementById('loadingOverlay');
         const resultsContainer = document.getElementById('resultsContainer');
         const resultsTableBody = document.getElementById('resultsTableBody');
-        const checklistItems = document.getElementById('checklistItems');
 
-        function initChecklist() {
-            checklistItems.innerHTML = '';
-            Object.entries(REQUIRED_DOCS).forEach(([key, val]) => {
-                checklistItems.innerHTML += `
-                    <div id="check-${key}" class="check-item">
-                        <span>${val}</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span>
-                    </div>`;
+        function resetChecklistVisuals() {
+            Object.keys(REQUIRED_DOCS).forEach(key => {
+                const el = document.getElementById(`check-${key}`);
+                if (el) {
+                    el.className = "check-item";
+                    const iconSpan = el.querySelector('span:last-child');
+                    if (iconSpan) {
+                        iconSpan.innerHTML = "○";
+                        iconSpan.style.color = "#94a3b8";
+                    }
+                }
             });
         }
 
-        btnAnalyze.addEventListener('click', async () => {
-            if(fileInput.files.length === 0) { alert('Te rog selectează cel puțin un fișier!'); return; }
-            
-            loadingOverlay.style.display = 'block';
-            resultsContainer.style.display = 'none';
-
-            const formData = new FormData();
-            Array.from(fileInput.files).forEach(file => { formData.append('files', file); });
-
-            try {
-                const response = await fetch('https://daycare-detached-animosity.ngrok-free.dev/api/analyze ', { method: 'POST', body: formData });
-                const data = await response.json();
-                
-                if (data.success) {
-                    resultsTableBody.innerHTML = '';
-                    initChecklist();
-
-                    data.analysis.documents.forEach(doc => {
-                        const isV = doc.validity_status === 'valid';
-                        resultsTableBody.innerHTML += `
-                            <tr>
-                                <td style="font-weight:600; color:#1e3a8a;">${doc.file_name}</td>
-                                <td>${REQUIRED_DOCS[doc.document_type] || doc.document_type}</td>
-                                <td class="${isV ? 'text-valid' : 'text-invalid'}">${doc.validity_status.toUpperCase()}</td>
-                                <td style="color:#475569; font-size:12px; font-style: italic;">${doc.observations}</td>
-                            </tr>`;
-                        
-                        const el = document.getElementById(`check-${doc.document_type}`);
-                        if(el) {
-                            el.className = `check-item ${isV ? 'item-valid' : 'item-invalid'}`;
-                            el.querySelector('span:last-child').innerHTML = isV ? '✓' : '⚠️';
-                            el.querySelector('span:last-child').style.color = isV ? '#16a34a' : '#dc2626';
-                        }
-                    });
-
-                    if(data.analysis.missing_documents) {
-                        data.analysis.missing_documents.forEach(key => {
-                            const el = document.getElementById(`check-${key}`);
-                            if(el) { 
-                                el.className = "check-item item-invalid"; 
-                                el.querySelector('span:last-child').innerHTML = '✗'; 
-                                el.querySelector('span:last-child').style.color = '#dc2626';
-                            }
-                        });
-                    }
-                    resultsContainer.style.display = 'block';
-                } else {
-                    alert('Eroare la nivelul motorului AI: ' + data.error);
-                }
-            } catch (err) {
-                alert('Eroare de conexiune: Asigură-te că serverul "python app.py" rulează în Command Prompt.');
-            } finally {
-                loadingOverlay.style.display = 'none';
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                fileListDisplay.innerHTML = "<strong>Fișiere pregătite:</strong><br>";
+                Array.from(fileInput.files).forEach(f => {
+                    fileListDisplay.innerHTML += `• ${f.name} (${(f.size / 1024).toFixed(1)} KB)<br>`;
+                });
+                fileListDisplay.style.display = 'block';
+            } else {
+                fileListDisplay.style.display = 'none';
             }
         });
 
-        initChecklist();
-    </script>
-</body>
-</html>
+        btnAnalyze.addEventListener('click', async () => {
+            if (fileInput.files.length === 0) { 
