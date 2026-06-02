@@ -1,70 +1,169 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IDP Daune Auto - GPT-4o</title>
-  <style>
-    :root {
-      --blue-50:#eff6ff; --blue-100:#dbeafe; --blue-500:#3b82f6; --blue-600:#2563eb; --blue-700:#1d4ed8;
-      --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-500:#6b7280; --gray-700:#374151; --gray-900:#111827;
-      --green-50:#ecfdf5; --green-100:#d1fae5; --green-700:#047857;
-      --red-50:#fef2f2; --red-100:#fee2e2; --red-700:#b91c1c;
-      --shadow:0 20px 45px rgba(15,23,42,.08); --radius:22px;
-    }
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--gray-900);background:radial-gradient(circle at top left,rgba(59,130,246,.18),transparent 34%),linear-gradient(135deg,#f8fafc 0%,#eef2ff 100%);min-height:100vh}.app{width:min(1240px,calc(100% - 32px));margin:0 auto;padding:32px 0 48px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:28px}.brand{display:flex;align-items:center;gap:14px}.brand-icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:white;font-size:20px;font-weight:900;background:linear-gradient(135deg,var(--blue-600),#60a5fa);box-shadow:0 12px 28px rgba(37,99,235,.25)}.brand h1{margin:0;font-size:clamp(24px,3vw,34px);line-height:1.1}.brand p{margin:6px 0 0;color:var(--gray-500);font-size:15px}.pill{border:1px solid var(--blue-100);background:rgba(255,255,255,.72);color:var(--blue-700);padding:10px 14px;border-radius:999px;font-weight:700;font-size:14px;white-space:nowrap}.grid{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:22px;align-items:start}.card{background:rgba(255,255,255,.88);border:1px solid rgba(226,232,240,.95);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(10px)}.main-card{padding:24px}.side-card{padding:22px;position:sticky;top:18px;max-height:calc(100vh - 36px);overflow:auto}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.section-title h2{margin:0;font-size:20px}.section-title span{color:var(--gray-500);font-size:14px}.upload-zone{border:2px dashed #bfdbfe;border-radius:24px;min-height:255px;display:grid;place-items:center;text-align:center;padding:28px;background:linear-gradient(180deg,rgba(239,246,255,.85),rgba(255,255,255,.9));transition:.2s ease;cursor:pointer}.upload-zone.dragover{border-color:var(--blue-600);background:var(--blue-50);transform:translateY(-2px)}.upload-icon{width:76px;height:76px;border-radius:24px;display:grid;place-items:center;margin:0 auto 18px;font-size:34px;color:var(--blue-700);background:var(--blue-100)}.upload-zone h3{margin:0 0 8px;font-size:22px}.upload-zone p{margin:0 0 18px;color:var(--gray-500)}.file-input{display:none}.btn{border:0;border-radius:14px;padding:13px 18px;font-weight:800;font-size:15px;cursor:pointer;transition:.18s ease;display:inline-flex;align-items:center;justify-content:center;gap:9px}.btn-primary{color:white;background:linear-gradient(135deg,var(--blue-600),var(--blue-500));box-shadow:0 12px 22px rgba(37,99,235,.22)}.btn-primary:hover{transform:translateY(-1px);background:linear-gradient(135deg,var(--blue-700),var(--blue-600))}.btn-primary:disabled{opacity:.55;cursor:not-allowed;transform:none}.btn-soft{color:var(--blue-700);background:var(--blue-50);border:1px solid var(--blue-100)}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}.files-panel{margin-top:20px;border:1px solid var(--gray-200);border-radius:18px;overflow:hidden;background:white}.files-header{display:flex;justify-content:space-between;gap:12px;padding:14px 16px;background:var(--gray-50);border-bottom:1px solid var(--gray-200);font-weight:800}.file-list{list-style:none;padding:0;margin:0}.file-list li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px;border-bottom:1px solid var(--gray-100)}.file-list li:last-child{border-bottom:0}.file-name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:420px}.file-size{margin-top:3px;color:var(--gray-500);font-size:13px}.small-badge{border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800;background:var(--blue-50);color:var(--blue-700);white-space:nowrap}.checklist{display:grid;gap:12px;margin-top:14px}.check-group{margin-top:16px}.check-group:first-child{margin-top:0}.check-group-title{margin:0 0 10px;color:var(--gray-500);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.07em}.check-item{display:flex;align-items:center;gap:12px;padding:13px;border-radius:16px;border:1px solid var(--gray-200);background:white;margin-bottom:10px}.status-icon{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;font-weight:900;flex:0 0 auto}.status-waiting{background:var(--gray-100);color:var(--gray-500)}.status-loaded{background:var(--green-100);color:var(--green-700)}.status-missing{background:var(--red-100);color:var(--red-700)}.check-text strong{display:block;font-size:14px}.check-text span{display:block;margin-top:2px;color:var(--gray-500);font-size:13px}.progress-wrap{display:none;margin-top:22px;padding:18px;border-radius:18px;background:var(--blue-50);border:1px solid var(--blue-100)}.progress-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;color:var(--blue-700);font-weight:800}.spinner{width:24px;height:24px;border:3px solid var(--blue-100);border-top-color:var(--blue-600);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.progress-bar{height:12px;overflow:hidden;border-radius:999px;background:white;border:1px solid var(--blue-100)}.progress-fill{width:100%;height:100%;background:linear-gradient(90deg,var(--blue-500),var(--blue-700),var(--blue-500));border-radius:inherit;animation:pulse 1.2s ease-in-out infinite}@keyframes pulse{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}.result-banner{display:none;margin-top:22px;border-radius:20px;padding:18px;border:1px solid}.result-banner h3{margin:0 0 8px;font-size:20px}.result-banner p,.result-banner ul{margin:0;line-height:1.55}.result-success{background:var(--green-50);border-color:var(--green-100);color:#064e3b}.result-error{background:var(--red-50);border-color:var(--red-100);color:#7f1d1d}.results,.recommendations{display:none;margin-top:22px}.results h2,.recommendations h2{margin:0 0 14px;font-size:20px}.table-wrap{overflow-x:auto;border:1px solid var(--gray-200);border-radius:18px;background:white}table{width:100%;border-collapse:collapse;min-width:920px}th{text-align:left;padding:14px;background:var(--gray-50);color:var(--gray-700);font-size:13px;border-bottom:1px solid var(--gray-200)}td{padding:14px;border-bottom:1px solid var(--gray-100);vertical-align:top;font-size:14px}tr:last-child td{border-bottom:0}.valid{color:var(--green-700);font-weight:900}.invalid{color:var(--red-700);font-weight:900}.unknown{color:var(--gray-700);font-weight:900}.missing{color:var(--red-700);font-weight:900}.recommendation-list{margin:0;padding-left:34px;line-height:1.6;background:white;border:1px solid var(--gray-200);border-radius:18px;padding-top:14px;padding-bottom:14px}.hint{margin-top:16px;padding:14px;border-radius:16px;background:var(--gray-50);border:1px solid var(--gray-200);color:var(--gray-500);font-size:14px;line-height:1.5}.error-box{display:none;margin-top:18px;border-radius:18px;padding:16px;border:1px solid var(--red-100);background:var(--red-50);color:var(--red-700);font-weight:700;line-height:1.5}@media(max-width:940px){.grid{grid-template-columns:1fr}.side-card{position:static;max-height:none}.topbar{align-items:flex-start;flex-direction:column}.pill{white-space:normal}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDP Daune Auto - Procesare Inteligentă</title>
+    <script src="https://jsdelivr.net"></script>
+    <script src="https://tailwindcss.com"></script>
 </head>
-<body>
-  <main class="app">
-    <header class="topbar">
-      <div class="brand"><div class="brand-icon">KTH</div><div><h1>IDP Daune Auto</h1><p>Analiză reală documente prin backend Flask + GPT-4o</p></div></div>
-      <div class="pill">Platformă Inteligentă de Preluare Documente Daună Auto</div>
-    </header>
-    <section class="grid">
-      <div class="card main-card">
-        <div class="section-title"><div><h2>Încărcare documente și fotografii</h2><span>Acceptă PDF, PNG, JPG/JPEG · poți selecta mai multe fișiere</span></div></div>
-        <label class="upload-zone" id="uploadZone" for="fileInput">
-          <input class="file-input" id="fileInput" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" />
-          <div><div class="upload-icon">⇪</div><h3>Trage documentele aici</h3><p>sau apasă pentru a răsfoi fișierele din calculator</p><span class="btn btn-soft">Alege fișiere</span></div>
-        </label>
-        <div class="actions"><button class="btn btn-primary" id="analyzeBtn" disabled>Analizează Documente cu GPT-4o</button><button class="btn btn-soft" id="resetBtn">Resetează</button></div>
-        <div class="files-panel" id="filesPanel" style="display:none;"><div class="files-header"><span>Fișiere încărcate</span><span id="fileCount">0 fișiere</span></div><ul class="file-list" id="fileList"></ul></div>
-        <div class="progress-wrap" id="progressWrap"><div class="progress-top"><span id="progressText">AI analizează documentele tale prin GPT-4o...</span><span class="spinner"></span></div><div class="progress-bar"><div class="progress-fill"></div></div></div>
-        <div class="error-box" id="errorBox"></div><div class="result-banner" id="resultBanner"></div>
-        <div class="results" id="results"><h2>Rezultate detaliate IDP</h2><div class="table-wrap"><table><thead><tr><th>Nume fișier</th><th>Tip document</th><th>Status valabilitate</th><th>Dată expirare</th><th>Observații</th></tr></thead><tbody id="resultsBody"></tbody></table></div></div>
-        <div class="recommendations" id="recommendations"><h2>Recomandări</h2><ul class="recommendation-list" id="recommendationsList"></ul></div>
-        <div class="hint">Important: acest frontend trimite fișierele către backend-ul Flask. Dacă site-ul este deschis de pe GitHub Pages, backend-ul local de pe PC nu va fi accesibil pentru alți utilizatori până nu îl publici online sau până nu folosești un tunel de test precum ngrok.</div>
-      </div>
-      <aside class="card side-card"><div class="section-title"><div><h2>Checklist documente</h2><span>Status dosar daună</span></div></div><div class="checklist" id="checklist"></div></aside>
-    </section>
-  </main>
-  <script>
-    const BACKEND_ANALYZE_URL = "http://127.0.0.1:5000/api/analyze";
-    const documentGroups=[{title:"Documente dosar",items:["Permis conducere","Talon auto","Poliță CASCO","Buletin","Contract cesiune","Contract mandat","Împuternicire proprietar"]},{title:"Fotografii parbriz și identificare",items:["Fotografii parbriz avariat","Foto cod parbriz avariat","Foto serie VIN (număr de șasiu)","Foto parbriz înlocuit cu cod nou"]}];
-    const requiredDocs=documentGroups.flatMap(g=>g.items);let uploadedFiles=[];
-    const uploadZone=document.getElementById("uploadZone"),fileInput=document.getElementById("fileInput"),analyzeBtn=document.getElementById("analyzeBtn"),resetBtn=document.getElementById("resetBtn"),filesPanel=document.getElementById("filesPanel"),fileList=document.getElementById("fileList"),fileCount=document.getElementById("fileCount"),checklist=document.getElementById("checklist"),progressWrap=document.getElementById("progressWrap"),progressText=document.getElementById("progressText"),resultBanner=document.getElementById("resultBanner"),results=document.getElementById("results"),resultsBody=document.getElementById("resultsBody"),recommendations=document.getElementById("recommendations"),recommendationsList=document.getElementById("recommendationsList"),errorBox=document.getElementById("errorBox");
-    function init(){renderChecklist();bindEvents()}function bindEvents(){fileInput.addEventListener("change",e=>addFiles(Array.from(e.target.files)));uploadZone.addEventListener("dragover",e=>{e.preventDefault();uploadZone.classList.add("dragover")});uploadZone.addEventListener("dragleave",()=>uploadZone.classList.remove("dragover"));uploadZone.addEventListener("drop",e=>{e.preventDefault();uploadZone.classList.remove("dragover");addFiles(Array.from(e.dataTransfer.files))});analyzeBtn.addEventListener("click",analyzeDocuments);resetBtn.addEventListener("click",resetApp)}
-    function addFiles(files){const allowedTypes=["application/pdf","image/png","image/jpeg"];const validFiles=files.filter(file=>{const ext=file.name.toLowerCase().split(".").pop();return allowedTypes.includes(file.type)||["pdf","png","jpg","jpeg"].includes(ext)});const rejectedCount=files.length-validFiles.length;if(rejectedCount>0)showError(`Au fost ignorate ${rejectedCount} fișiere. Sunt acceptate doar PDF, PNG, JPG și JPEG.`);uploadedFiles=[...uploadedFiles,...validFiles];renderFileList();analyzeBtn.disabled=uploadedFiles.length===0;clearResultsOnly();renderChecklist()}
-    async function analyzeDocuments(){if(!uploadedFiles.length){showError("Încarcă cel puțin un fișier înainte de analiză.");return}clearResultsOnly();setLoading(true);const formData=new FormData();uploadedFiles.forEach(file=>formData.append("files",file));try{const response=await fetch(BACKEND_ANALYZE_URL,{method:"POST",body:formData});let payload=null;try{payload=await response.json()}catch(e){throw new Error("Serverul nu a returnat JSON valid.")}if(!response.ok||payload.success===false){throw new Error(payload.error||`Eroare server: ${response.status}`)}if(!payload.analysis)throw new Error("Răspunsul serverului nu conține câmpul 'analysis'.");renderAnalysis(payload.analysis)}catch(error){const msg="Nu am putut analiza documentele. Verifică dacă backend-ul Flask rulează la "+BACKEND_ANALYZE_URL+". Detalii: "+error.message;showError(msg);alert("Eroare la analiză: "+error.message)}finally{setLoading(false)}}
-    function renderAnalysis(analysis){const isValid=normalizeText(analysis.overall_status||"unknown")==="valid";renderBanner(analysis,isValid);renderResults(analysis.documents||[]);renderRecommendations(analysis.recommendations||[]);updateChecklistFromAnalysis(analysis)}
-    function renderBanner(analysis,isValid){resultBanner.style.display="block";resultBanner.className="result-banner "+(isValid?"result-success":"result-error");const title=isValid?"✅ Dosar complet și valid!":"❌ Dosarul are probleme sau necesită verificări.";const summary=analysis.summary||(isValid?"Documentele analizate par valide.":"Au fost identificate probleme în documentele încărcate.");const missing=Array.isArray(analysis.missing_documents)?analysis.missing_documents:[];resultBanner.innerHTML=`<h3>${title}</h3><p>${escapeHtml(summary)}</p>${missing.length?`<ul style="margin-top:10px;">${missing.map(i=>`<li>Lipsește: ${escapeHtml(i)}</li>`).join("")}</ul>`:""}`}
-    function renderResults(documents){results.style.display="block";if(!Array.isArray(documents)||documents.length===0){resultsBody.innerHTML=`<tr><td colspan="5">Serverul nu a returnat documente analizate.</td></tr>`;return}resultsBody.innerHTML=documents.map(doc=>{const validity=doc.validity_status||"unknown";return `<tr><td>${escapeHtml(doc.file_name||"N/A")}</td><td>${escapeHtml(doc.document_type||"Necunoscut")}</td><td class="${getValidityClass(validity)}">${escapeHtml(validity)}</td><td>${escapeHtml(doc.expiration_date||"N/A")}</td><td>${escapeHtml(doc.observations||"")}</td></tr>`}).join("")}
-    function renderRecommendations(items){if(!Array.isArray(items)||items.length===0){recommendations.style.display="none";recommendationsList.innerHTML="";return}recommendations.style.display="block";recommendationsList.innerHTML=items.map(item=>`<li>${escapeHtml(item)}</li>`).join("")}
-    function updateChecklistFromAnalysis(analysis){const statusMap={};requiredDocs.forEach(doc=>statusMap[doc]="missing");const missingDocuments=Array.isArray(analysis.missing_documents)?analysis.missing_documents:[];const documents=Array.isArray(analysis.documents)?analysis.documents:[];documents.forEach(doc=>{const matched=findMatchingRequiredDocument(doc.document_type||"");if(matched)statusMap[matched]="loaded"});missingDocuments.forEach(missingDoc=>{const matched=findMatchingRequiredDocument(missingDoc);if(matched)statusMap[matched]="missing"});renderChecklist(statusMap)}
-    function findMatchingRequiredDocument(value){const normalizedValue=normalizeText(value);if(!normalizedValue)return null;return requiredDocs.find(doc=>{const normalizedDoc=normalizeText(doc);return normalizedValue===normalizedDoc||normalizedValue.includes(normalizedDoc)||normalizedDoc.includes(normalizedValue)||aliasesMatch(normalizedValue,normalizedDoc)})||null}
-    function aliasesMatch(value,doc){const aliasMap={"buletin":["carte identitate","ci","act identitate","id card"],"permis conducere":["permis","driver license","driving licence"],"talon auto":["certificat inmatriculare","talon","registration certificate"],"polita casco":["casco","polita asigurare","insurance policy"],"contract cesiune":["cesiune"],"contract mandat":["mandat"],"imputernicire proprietar":["imputernicire","procura","authorization"],"fotografii parbriz avariat":["parbriz avariat","foto parbriz avariat","windshield damage"],"foto cod parbriz avariat":["cod parbriz avariat","cod parbriz vechi","old windshield code"],"foto serie vin numar de sasiu":["vin","serie vin","numar de sasiu","serie sasiu"],"foto parbriz inlocuit cu cod nou":["cod nou","parbriz inlocuit","new windshield code"]};return (aliasMap[doc]||[]).some(alias=>value.includes(normalizeText(alias)))}
-    function renderChecklist(statusMap={}){checklist.innerHTML=documentGroups.map(group=>`<div class="check-group"><p class="check-group-title">${group.title}</p>${group.items.map(doc=>{const meta=getStatusMeta(statusMap[doc]||"waiting");return `<div class="check-item"><div class="status-icon ${meta.className}">${meta.icon}</div><div class="check-text"><strong>${escapeHtml(doc)}</strong><span>${meta.label}</span></div></div>`}).join("")}</div>`).join("")}
-    function getStatusMeta(status){if(status==="loaded")return{className:"status-loaded",icon:"✓",label:"Încărcat"};if(status==="missing")return{className:"status-missing",icon:"!",label:"Lipsește"};return{className:"status-waiting",icon:"…",label:"Așteptare"}}
-    function renderFileList(){filesPanel.style.display=uploadedFiles.length?"block":"none";fileCount.textContent=uploadedFiles.length===1?"1 fișier":`${uploadedFiles.length} fișiere`;fileList.innerHTML=uploadedFiles.map(file=>`<li><div><div class="file-name">${escapeHtml(file.name)}</div><div class="file-size">${formatSize(file.size)}</div></div><span class="small-badge">${detectExtension(file.name)}</span></li>`).join("")}
-    function setLoading(isLoading){progressWrap.style.display=isLoading?"block":"none";progressText.textContent="AI analizează documentele tale prin GPT-4o...";analyzeBtn.disabled=isLoading||uploadedFiles.length===0;resetBtn.disabled=isLoading}
-    function showError(message){errorBox.style.display="block";errorBox.textContent=message}function clearResultsOnly(){progressWrap.style.display="none";resultBanner.style.display="none";results.style.display="none";recommendations.style.display="none";recommendationsList.innerHTML="";resultsBody.innerHTML="";errorBox.style.display="none";errorBox.textContent=""}
-    function resetApp(){uploadedFiles=[];fileInput.value="";analyzeBtn.disabled=true;resetBtn.disabled=false;renderFileList();renderChecklist();clearResultsOnly()}
-    function getValidityClass(validity){const n=normalizeText(validity);if(n.includes("valid")&&!n.includes("invalid"))return"valid";if(n.includes("invalid")||n.includes("expirat"))return"invalid";if(n.includes("lipseste")||n.includes("missing"))return"missing";return"unknown"}
-    function normalizeText(value){return String(value||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[()]/g,"").replace(/[^a-z0-9]+/g," ").trim()}
-    function formatSize(bytes){if(!bytes)return"0 KB";const kb=bytes/1024;if(kb<1024)return`${kb.toFixed(1)} KB`;return`${(kb/1024).toFixed(2)} MB`}function detectExtension(fileName){return fileName.split(".").pop().toUpperCase()||"FILE"}
-    function escapeHtml(value){return String(value??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
-    init();
-  </script>
-</body>
-</html>
+<body class="bg-gray-50 font-sans text-gray-800 min-h-screen">
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-8 border-b border-gray-200 pb-5">
+            <h1 class="text-3xl font-bold text-blue-900 flex items-center gap-2">
+                <i data-lucide="shield-check" class="text-blue-600 w-8 h-8"></i> Intelligent Document Processing (IDP)
+            </h1>
+            <p class="text-gray-600 mt-1">Sistem automat de analiză și validare pentru deschiderea dosarelor de daună CASCO</p>
+            <div class="inline-flex items-center gap-2 bg-green-50 text-green-700 text-xs px-2.5 py-1 rounded-full mt-3 font-medium border border-green-200">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Conectat la Motorul AI GPT-4o Real
+            </div>
+        </header>
+
+        <!-- Status Banner -->
+        <div id="statusBanner" class="hidden mb-6 p-4 rounded-xl border flex items-start gap-3"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Coloana Stânga: Upload și Rezultate -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Zona Upload -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <i data-lucide="upload-cloud" class="text-blue-500"></i> Încarcă Documentele Dosarului
+                    </h2>
+                    
+                    <div id="dropZone" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer bg-gray-50">
+                        <input type="file" id="fileInput" multiple accept="image/*,.pdf" class="hidden">
+                        <i data-lucide="files" class="mx-auto w-12 h-12 text-gray-400 mb-3"></i>
+                        <p class="text-sm font-medium text-gray-700">Trage fișierele aici sau <span class="text-blue-600 underline">răsfoiește computerul</span></p>
+                        <p class="text-xs text-gray-500 mt-1">Acceptă imagini (PNG, JPG, JPEG) și documente PDF</p>
+                    </div>
+
+                    <!-- Listă fișiere selectate -->
+                    <div id="selectedFiles" class="mt-4 space-y-2 hidden">
+                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Fișiere pregătite pentru scanare:</h3>
+                        <div id="filesList" class="space-y-1"></div>
+                    </div>
+
+                    <button id="btnAnalyze" disabled class="mt-5 w-full bg-blue-600 text-white font-medium py-3 px-4 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm">
+                        <i data-lucide="cpu"></i> Analizează Documentele cu AI
+                    </button>
+                </div>
+
+                <!-- Spinner Încărcare -->
+                <div id="loadingOverlay" class="hidden bg-white p-12 rounded-2xl shadow-sm border border-gray-100 text-center space-y-4">
+                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+                    <p class="text-lg font-medium text-gray-700 animate-pulse">AI analizează documentele tale prin GPT-4o...</p>
+                    <p class="text-xs text-gray-500">Această operațiune extrage datele, verifică validitatea și textul din imagini.</p>
+                </div>
+
+                <!-- Tabel Rezultate -->
+                <div id="resultsContainer" class="hidden bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-5 border-b border-gray-100">
+                        <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                            <i data-lucide="table" class="text-blue-500"></i> Date Extrase și Analiză Detaliată
+                        </h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 text-xs font-semibold text-gray-500 border-b border-gray-100 uppercase tracking-wider">
+                                    <th class="p-4">Fișier sursă</th>
+                                    <th class="p-4">Tip document identificat</th>
+                                    <th class="p-4">Status</th>
+                                    <th class="p-4">Valabilitate</th>
+                                    <th class="p-4">Observații AI</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsTableBody" class="divide-y divide-gray-100 text-sm"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recomandări și Plan de Remediere -->
+                <div id="recommendationsContainer" class="hidden bg-yellow-50 border border-yellow-200 p-5 rounded-2xl space-y-3">
+                    <h3 class="font-semibold text-yellow-800 flex items-center gap-2 text-base">
+                        <i data-lucide="alert-triangle"></i> Instrucțiuni de remediere și pași următori:
+                    </h3>
+                    <ul id="recommendationsList" class="list-disc pl-5 text-sm text-yellow-700 space-y-1"></ul>
+                </div>
+            </div>
+
+            <!-- Coloana Dreaptă: Checklist Automat -->
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
+                        <i data-lucide="clipboard-list" class="text-blue-500"></i> Checklist Dosar Daună
+                    </h2>
+                    <p class="text-xs text-gray-500 mb-4">Verificarea automată a prezenței documentelor necesare</p>
+                    
+                    <div id="checklistItems" class="space-y-3">
+                        <!-- Categoriile de documente vor fi controlate din JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configurația documentelor obligatorii
+        const REQUIRED_DOCS = {
+            "buletin": "Buletin / Carte de identitate",
+            "permis_conducere": "Permis de conducere",
+            "talon_auto": "Talon auto (Certificat înmatriculare)",
+            "polita_casco": "Poliță CASCO",
+            "contract_cesiune": "Contract cesiune",
+            "contract_mandat": "Contract mandat",
+            "imputernicire_proprietar": "Împuternicire proprietar",
+            "fotografie_parbriz_avariat": "Fotografii parbriz avariat",
+            "foto_cod_parbriz_avariat": "Foto cod parbriz avariat",
+            "foto_serie_vin": "Foto serie VIN (număr șasiu)",
+            "foto_parbriz_inlocuit_cu_cod_nou": "Foto parbriz înlocuit cu cod nou"
+        };
+
+        let uploadedFiles = [];
+
+        // Inițializare elemente interfață
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const btnAnalyze = document.getElementById('btnAnalyze');
+        const selectedFiles = document.getElementById('selectedFiles');
+        const filesList = document.getElementById('filesList');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const resultsTableBody = document.getElementById('resultsTableBody');
+        const statusBanner = document.getElementById('statusBanner');
+        const checklistItems = document.getElementById('checklistItems');
+        const recommendationsContainer = document.getElementById('recommendationsContainer');
+        const recommendationsList = document.getElementById('recommendationsList');
+
+        // Desenează checklist-ul inițial în stare de așteptare
+        function renderInitialChecklist() {
+            checklistItems.innerHTML = '';
+            Object.entries(REQUIRED_DOCS).forEach(([key, val]) => {
+                checklistItems.innerHTML += `
+                    <div id="check-${key}" class="flex items-center justify-between p-3 rounded-xl border border-gray-100 bg-gray-50 text-gray-500">
+                        <span class="text-sm font-medium">${val}</span>
+                        <span class="status-icon"><i data-lucide="circle" class="w-4 h-4 text-gray-400"></i></span>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        // Evenimente pentru Selectare Fișiere
+        dropZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleFilesSelect);
+        
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-blue-500', 'bg-blue-50'); });
+        dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-blue-500', 'bg-blue-50'); });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+            if(e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                handleFilesSelect();
+            }
+        });
+
