@@ -34,7 +34,6 @@
 <body>
 
     <div class="container">
-        <!-- Antet Aplicatie -->
         <div class="header">
             <h1>Intelligent Document Processing (IDP)</h1>
             <p>Sistem automat de analiză și validare pentru deschiderea dosarelor de daună CASCO</p>
@@ -42,7 +41,6 @@
         </div>
 
         <div class="grid">
-            <!-- Zona din Stanga: Incarcare si Tabel Rezultate -->
             <div>
                 <div class="upload-box" onclick="document.getElementById('fileInput').click()">
                     <input type="file" id="fileInput" multiple accept="image/*,.pdf" style="margin: 0 auto; display: block;">
@@ -52,12 +50,10 @@
 
                 <button id="btnAnalyze" class="btn">Analizează Documentele cu GPT-4o Real</button>
 
-                <!-- Status de incarcare (Animație) -->
                 <div id="loadingOverlay" class="loading">
                     🔄 AI analizează documentele tale prin serverul local... Vă rugăm așteptați.
                 </div>
 
-                <!-- Tabel Date Extrase -->
                 <div id="resultsContainer" class="results-box">
                     <table>
                         <thead>
@@ -73,7 +69,6 @@
                 </div>
             </div>
 
-            <!-- Zona din Dreapta: Checklist Documente Obligatorii -->
             <div>
                 <div class="checklist">
                     <h3>Checklist Dosar Daună</h3>
@@ -84,7 +79,6 @@
     </div>
 
     <script>
-        // Lista celor 11 documente configurate
         const REQUIRED_DOCS = {
             "buletin": "Buletin / Carte de identitate",
             "permis_conducere": "Permis de conducere",
@@ -106,7 +100,6 @@
         const resultsTableBody = document.getElementById('resultsTableBody');
         const checklistItems = document.getElementById('checklistItems');
 
-        // Desenează structura curată a checklist-ului la pornire
         function initChecklist() {
             checklistItems.innerHTML = '';
             Object.entries(REQUIRED_DOCS).forEach(([key, val]) => {
@@ -117,35 +110,23 @@
             });
         }
 
-        // Evenimentul de trimitere către serverul tău local Flask
         btnAnalyze.addEventListener('click', async () => {
-            if(fileInput.files.length === 0) { 
-                alert('Te rog selectează cel puțin un fișier pentru analiză!'); 
-                return; 
-            }
+            if(fileInput.files.length === 0) { alert('Te rog selectează cel puțin un fișier!'); return; }
             
             loadingOverlay.style.display = 'block';
             resultsContainer.style.display = 'none';
 
             const formData = new FormData();
-            Array.from(fileInput.files).forEach(file => { 
-                formData.append('files', file); 
-            });
+            Array.from(fileInput.files).forEach(file => { formData.append('files', file); });
 
             try {
-                // Trimiterea datelor către adresa locală pornită în CMD
-                const response = await fetch('http://127.0.0', { 
-                    method: 'POST', 
-                    body: formData 
-                });
-                
+                const response = await fetch('https://daycare-detached-animosity.ngrok-free.dev/api/analyze ', { method: 'POST', body: formData });
                 const data = await response.json();
                 
                 if (data.success) {
                     resultsTableBody.innerHTML = '';
-                    initChecklist(); // Resetare checklist vizual
+                    initChecklist();
 
-                    // Parcurgem răspunsul oferit live de GPT-4o
                     data.analysis.documents.forEach(doc => {
                         const isV = doc.validity_status === 'valid';
                         resultsTableBody.innerHTML += `
@@ -156,7 +137,6 @@
                                 <td style="color:#475569; font-size:12px; font-style: italic;">${doc.observations}</td>
                             </tr>`;
                         
-                        // Actualizare stil în checklist pentru documentul detectat
                         const el = document.getElementById(`check-${doc.document_type}`);
                         if(el) {
                             el.className = `check-item ${isV ? 'item-valid' : 'item-invalid'}`;
@@ -165,10 +145,28 @@
                         }
                     });
 
-                    // Marcăm cu X roșu documentele pe care AI-ul le-a declarat lipsă
                     if(data.analysis.missing_documents) {
                         data.analysis.missing_documents.forEach(key => {
                             const el = document.getElementById(`check-${key}`);
                             if(el) { 
                                 el.className = "check-item item-invalid"; 
                                 el.querySelector('span:last-child').innerHTML = '✗'; 
+                                el.querySelector('span:last-child').style.color = '#dc2626';
+                            }
+                        });
+                    }
+                    resultsContainer.style.display = 'block';
+                } else {
+                    alert('Eroare la nivelul motorului AI: ' + data.error);
+                }
+            } catch (err) {
+                alert('Eroare de conexiune: Asigură-te că serverul "python app.py" rulează în Command Prompt.');
+            } finally {
+                loadingOverlay.style.display = 'none';
+            }
+        });
+
+        initChecklist();
+    </script>
+</body>
+</html>
