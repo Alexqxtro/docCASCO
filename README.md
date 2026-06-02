@@ -3,72 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IDP Daune Auto</title>
-    <!-- Stilurile principale încărcate direct -->
-    <script src="https://tailwindcss.com"></script>
-    <script src="https://jsdelivr.net"></script>
+    <title>IDP Daune Auto - Procesare Inteligentă</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
+        .header { border-bottom: 2px solid #2563eb; padding-bottom: 15px; margin-bottom: 25px; }
+        .header h1 { color: #1e3a8a; margin: 0; font-size: 26px; }
+        .header p { color: #666; margin: 5px 0 0 0; font-size: 14px; }
+        .badge { display: inline-block; background: #dcfce7; color: #15803d; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold; margin-top: 10px; border: 1px solid #bbf7d0; }
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
+        @media(max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+        .upload-box { border: 2px dashed #2563eb; padding: 30px; border-radius: 10px; text-align: center; background: #f8fafc; cursor: pointer; margin-bottom: 20px; }
+        .upload-box p { margin: 10px 0 0 0; font-size: 14px; font-weight: 500; color: #475569; }
+        .btn { width: 100%; background: #2563eb; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; transition: background 0.2s; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2); }
+        .btn:hover { background: #1d4ed8; }
+        .loading { display: none; text-align: center; padding: 20px; background: #eff6ff; color: #1d4ed8; border-radius: 8px; font-weight: bold; margin: 15px 0; border: 1px solid #bfdbfe; font-size: 16px; }
+        .results-box { display: none; margin-top: 20px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th { background: #f8fafc; padding: 12px; font-weight: 600; border-bottom: 1px solid #e5e7eb; color: #475569; }
+        td { padding: 12px; border-bottom: 1px solid #e5e7eb; background: white; }
+        .text-valid { color: #16a34a; font-weight: bold; }
+        .text-invalid { color: #dc2626; font-weight: bold; }
+        .checklist { background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; }
+        .checklist h3 { margin-top: 0; font-size: 16px; color: #1e3a8a; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 15px; }
+        .check-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; background: white; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: #475569; }
+        .item-valid { background-color: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+        .item-invalid { background-color: #fef2f2; border-color: #fecaca; color: #991b1b; }
+    </style>
 </head>
-<body class="bg-gray-100 text-gray-800 min-h-screen p-6">
+<body>
 
-    <div class="max-w-6xl mx-auto bg-white p-8 rounded-2xl shadow-md border border-gray-200">
-        <!-- Header -->
-        <div class="border-b pb-4 mb-6">
-            <h1 class="text-2xl font-bold text-blue-900">Intelligent Document Processing (IDP)</h1>
-            <p class="text-sm text-gray-600">Sistem real conectat la GPT-4o pentru validare dosare CASCO</p>
+    <div class="container">
+        <!-- Antet Aplicatie -->
+        <div class="header">
+            <h1>Intelligent Document Processing (IDP)</h1>
+            <p>Sistem automat de analiză și validare pentru deschiderea dosarelor de daună CASCO</p>
+            <span class="badge">● Conectat la Motorul AI GPT-4o Real</span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Zona din stanga -->
-            <div class="md:col-span-2 space-y-4">
-                <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center bg-gray-50">
-                    <input type="file" id="fileInput" multiple accept="image/*,.pdf" class="mb-2 block mx-auto text-sm">
-                    <p class="text-xs text-gray-500">Selectează poze sau documente PDF</p>
+        <div class="grid">
+            <!-- Zona din Stanga: Incarcare si Tabel Rezultate -->
+            <div>
+                <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                    <input type="file" id="fileInput" multiple accept="image/*,.pdf" style="margin: 0 auto; display: block;">
+                    <p>Trage fișierele aici sau fă click pentru a răsfoi computerul</p>
+                    <span style="font-size: 11px; color: #94a3b8;">Acceptă imagini (PNG, JPG, JPEG) și documente PDF</span>
                 </div>
 
-                <button id="btnAnalyze" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all">
-                    Analizează Documentele cu GPT-4o Real
-                </button>
+                <button id="btnAnalyze" class="btn">Analizează Documentele cu GPT-4o Real</button>
 
-                <!-- Status de incarcare -->
-                <div id="loadingOverlay" class="hidden text-center p-4 bg-blue-50 text-blue-700 rounded-xl font-medium animate-pulse">
-                    AI analizează documentele tale prin serverul local... vă rugăm așteptați.
+                <!-- Status de incarcare (Animație) -->
+                <div id="loadingOverlay" class="loading">
+                    🔄 AI analizează documentele tale prin serverul local... Vă rugăm așteptați.
                 </div>
 
-                <!-- Tabel Rezultate -->
-                <div id="resultsContainer" class="hidden border rounded-xl overflow-hidden bg-white">
-                    <table class="w-full text-sm text-left">
-                        <tr class="bg-gray-50 border-b text-xs uppercase font-semibold text-gray-600">
-                            <th class="p-3">Fișier</th>
-                            <th class="p-3">Tip identificat</th>
-                            <th class="p-3">Status</th>
-                            <th class="p-3">Observații AI</th>
-                        </tr>
+                <!-- Tabel Date Extrase -->
+                <div id="resultsContainer" class="results-box">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fișier sursă</th>
+                                <th>Tip identificat de AI</th>
+                                <th>Status</th>
+                                <th>Observații Extrase</th>
+                            </tr>
+                        </thead>
                         <tbody id="resultsTableBody"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Zona din dreapta: Checklist -->
-            <div class="bg-gray-50 p-4 rounded-xl border">
-                <h3 class="font-bold text-gray-900 mb-3 text-sm border-b pb-2">Checklist Documente</h3>
-                <div id="checklistItems" class="space-y-2 text-xs font-medium text-gray-600"></div>
+            <!-- Zona din Dreapta: Checklist Documente Obligatorii -->
+            <div>
+                <div class="checklist">
+                    <h3>Checklist Dosar Daună</h3>
+                    <div id="checklistItems"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Lista celor 11 documente configurate
         const REQUIRED_DOCS = {
             "buletin": "Buletin / Carte de identitate",
             "permis_conducere": "Permis de conducere",
-            "talon_auto": "Talon auto",
+            "talon_auto": "Talon auto (Certificat)",
             "polita_casco": "Poliță CASCO",
             "contract_cesiune": "Contract cesiune",
             "contract_mandat": "Contract mandat",
             "imputernicire_proprietar": "Împuternicire proprietar",
-            "fotografie_parbriz_avariat": "Foto parbriz avariat",
+            "fotografie_parbriz_avariat": "Fotografii parbriz avariat",
             "foto_cod_parbriz_avariat": "Foto cod parbriz avariat",
-            "foto_serie_vin": "Foto serie VIN",
-            "foto_parbriz_inlocuit_cu_cod_nou": "Foto parbriz înlocuit nou"
+            "foto_serie_vin": "Foto serie VIN (șasiu)",
+            "foto_parbriz_inlocuit_cu_cod_nou": "Foto parbriz înlocuit cod nou"
         };
 
         const fileInput = document.getElementById('fileInput');
@@ -78,68 +106,69 @@
         const resultsTableBody = document.getElementById('resultsTableBody');
         const checklistItems = document.getElementById('checklistItems');
 
+        // Desenează structura curată a checklist-ului la pornire
         function initChecklist() {
             checklistItems.innerHTML = '';
             Object.entries(REQUIRED_DOCS).forEach(([key, val]) => {
                 checklistItems.innerHTML += `
-                    <div id="check-${key}" class="p-2 border rounded bg-white flex justify-between items-center">
-                        <span>${val}</span><span class="text-gray-400 font-bold">○</span>
+                    <div id="check-${key}" class="check-item">
+                        <span>${val}</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span>
                     </div>`;
             });
         }
 
+        // Evenimentul de trimitere către serverul tău local Flask
         btnAnalyze.addEventListener('click', async () => {
-            if(fileInput.files.length === 0) { alert('Te rog selectează cel puțin un fișier!'); return; }
+            if(fileInput.files.length === 0) { 
+                alert('Te rog selectează cel puțin un fișier pentru analiză!'); 
+                return; 
+            }
             
-            loadingOverlay.classList.remove('hidden');
-            resultsContainer.classList.add('hidden');
+            loadingOverlay.style.display = 'block';
+            resultsContainer.style.display = 'none';
 
             const formData = new FormData();
-            Array.from(fileInput.files).forEach(file => { formData.append('files', file); });
+            Array.from(fileInput.files).forEach(file => { 
+                formData.append('files', file); 
+            });
 
             try {
-                const response = await fetch('http://127.0.0', { method: 'POST', body: formData });
+                // Trimiterea datelor către adresa locală pornită în CMD
+                const response = await fetch('http://127.0.0', { 
+                    method: 'POST', 
+                    body: formData 
+                });
+                
                 const data = await response.json();
                 
                 if (data.success) {
                     resultsTableBody.innerHTML = '';
-                    initChecklist();
+                    initChecklist(); // Resetare checklist vizual
 
+                    // Parcurgem răspunsul oferit live de GPT-4o
                     data.analysis.documents.forEach(doc => {
+                        const isV = doc.validity_status === 'valid';
                         resultsTableBody.innerHTML += `
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="p-3 font-medium">${doc.file_name}</td>
-                                <td class="p-3">${REQUIRED_DOCS[doc.document_type] || doc.document_type}</td>
-                                <td class="p-3 font-bold ${doc.validity_status === 'valid' ? 'text-green-600' : 'text-red-600'}">${doc.validity_status}</td>
-                                <td class="p-3 text-xs text-gray-600">${doc.observations}</td>
+                            <tr>
+                                <td style="font-weight:600; color:#1e3a8a;">${doc.file_name}</td>
+                                <td>${REQUIRED_DOCS[doc.document_type] || doc.document_type}</td>
+                                <td class="${isV ? 'text-valid' : 'text-invalid'}">${doc.validity_status.toUpperCase()}</td>
+                                <td style="color:#475569; font-size:12px; font-style: italic;">${doc.observations}</td>
                             </tr>`;
                         
+                        // Actualizare stil în checklist pentru documentul detectat
                         const el = document.getElementById(`check-${doc.document_type}`);
                         if(el) {
-                            el.className = `p-2 border rounded flex justify-between items-center ${doc.validity_status === 'valid' ? 'bg-green-50 border-green-300 text-green-800' : 'bg-red-50 border-red-300 text-red-800'}`;
-                            el.querySelector('span:last-child').innerHTML = doc.validity_status === 'valid' ? '✓' : '⚠️';
+                            el.className = `check-item ${isV ? 'item-valid' : 'item-invalid'}`;
+                            el.querySelector('span:last-child').innerHTML = isV ? '✓' : '⚠️';
+                            el.querySelector('span:last-child').style.color = isV ? '#16a34a' : '#dc2626';
                         }
                     });
 
+                    // Marcăm cu X roșu documentele pe care AI-ul le-a declarat lipsă
                     if(data.analysis.missing_documents) {
                         data.analysis.missing_documents.forEach(key => {
                             const el = document.getElementById(`check-${key}`);
-                            if(el) { el.className = "p-2 border rounded flex justify-between items-center bg-red-50 border-red-200 text-red-700"; el.querySelector('span:last-child').innerHTML = '✗'; }
-                        });
-                    }
-                    resultsContainer.classList.remove('hidden');
-                } else {
-                    alert('Eroare AI: ' + data.error);
-                }
-            } catch (err) {
-                alert('Eroare: Nu s-a putut conecta la serverul local Python (http://127.0.0.1:5000). Porneste app.py in CMD.');
-            } finally {
-                loadingOverlay.classList.add('hidden');
-            }
-        });
-
-        initChecklist();
-    </script>
-</body>
-</html>
-# docCASCO
+                            if(el) { 
+                                el.className = "check-item item-invalid"; 
+                                el.querySelector('span:last-child').innerHTML = '✗'; 
