@@ -31,7 +31,7 @@
         .checklist { background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; min-height: 300px; }
         .checklist h3 { margin-top: 0; font-size: 16px; color: #1e3a8a; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 15px; }
         .check-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; background: white; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: #475569; }
-        .item-valid { background-color: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+        .item-valid { background-color: #f0fdf4; border-color: #bbf7d0; color: #166434; }
         .item-invalid { background-color: #fef2f2; border-color: #fecaca; color: #991b1b; }
     </style>
 </head>
