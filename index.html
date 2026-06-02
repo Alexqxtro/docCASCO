@@ -4,102 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IDP Daune Auto - Procesare Inteligentă</title>
-    <script src="https://jsdelivr.net"></script>
-    <script src="https://tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
+        .header { border-bottom: 2px solid #2563eb; padding-bottom: 15px; margin-bottom: 25px; }
+        .header h1 { color: #1e3a8a; margin: 0; font-size: 26px; }
+        .header p { color: #666; margin: 5px 0 0 0; font-size: 14px; }
+        .badge { display: inline-block; background: #dcfce7; color: #15803d; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold; margin-top: 10px; border: 1px solid #bbf7d0; }
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
+        @media(max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+        
+        .upload-section { background: #f8fafc; border: 2px solid #e2e8f0; padding: 25px; border-radius: 10px; margin-bottom: 20px; }
+        .file-input-wrapper { display: block; margin-bottom: 15px; }
+        .file-list { margin-top: 15px; background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; font-size: 13px; color: #475569; display: none; }
+        
+        .btn { width: 100%; background: #2563eb; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; transition: background 0.2s; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2); }
+        .btn:hover { background: #1d4ed8; }
+        .loading { display: none; text-align: center; padding: 20px; background: #eff6ff; color: #1d4ed8; border-radius: 8px; font-weight: bold; margin: 15px 0; border: 1px solid #bfdbfe; font-size: 16px; }
+        .results-box { display: none; margin-top: 20px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th { background: #f8fafc; padding: 12px; font-weight: 600; border-bottom: 1px solid #e5e7eb; color: #475569; }
+        td { padding: 12px; border-bottom: 1px solid #e5e7eb; background: white; }
+        .text-valid { color: #16a34a; font-weight: bold; }
+        .text-invalid { color: #dc2626; font-weight: bold; }
+        
+        .checklist { background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; min-height: 300px; }
+        .checklist h3 { margin-top: 0; font-size: 16px; color: #1e3a8a; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 15px; }
+        .check-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; background: white; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: #475569; }
+        .item-valid { background-color: #f0fdf4; border-color: #bbf7d0; color: #166434; }
+        .item-invalid { background-color: #fef2f2; border-color: #fecaca; color: #991b1b; }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800 min-h-screen">
+<body>
 
-    <div class="max-w-7xl mx-auto px-4 py-8">
-        <!-- Header -->
-        <header class="mb-8 border-b border-gray-200 pb-5">
-            <h1 class="text-3xl font-bold text-blue-900 flex items-center gap-2">
-                <i data-lucide="shield-check" class="text-blue-600 w-8 h-8"></i> Intelligent Document Processing (IDP)
-            </h1>
-            <p class="text-gray-600 mt-1">Sistem automat de analiză și validare pentru deschiderea dosarelor de daună CASCO</p>
-            <div class="inline-flex items-center gap-2 bg-green-50 text-green-700 text-xs px-2.5 py-1 rounded-full mt-3 font-medium border border-green-200">
-                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Conectat la Motorul AI GPT-4o Real
-            </div>
-        </header>
+    <div class="container">
+        <!-- Antet Aplicatie -->
+        <div class="header">
+            <h1>Intelligent Document Processing (IDP)</h1>
+            <p>Sistem automat de analiză și validare pentru deschiderea dosarelor de daună CASCO</p>
+            <span class="badge">● Conectat la Motorul AI GPT-4o Real</span>
+        </div>
 
-        <!-- Status Banner -->
-        <div id="statusBanner" class="hidden mb-6 p-4 rounded-xl border flex items-start gap-3"></div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Coloana Stânga: Upload și Rezultate -->
-            <div class="lg:col-span-2 space-y-6">
-                <!-- Zona Upload -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                        <i data-lucide="upload-cloud" class="text-blue-500"></i> Încarcă Documentele Dosarului
-                    </h2>
-                    
-                    <div id="dropZone" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer bg-gray-50">
-                        <input type="file" id="fileInput" multiple accept="image/*,.pdf" class="hidden">
-                        <i data-lucide="files" class="mx-auto w-12 h-12 text-gray-400 mb-3"></i>
-                        <p class="text-sm font-medium text-gray-700">Trage fișierele aici sau <span class="text-blue-600 underline">răsfoiește computerul</span></p>
-                        <p class="text-xs text-gray-500 mt-1">Acceptă imagini (PNG, JPG, JPEG) și documente PDF</p>
-                    </div>
-
-                    <!-- Listă fișiere selectate -->
-                    <div id="selectedFiles" class="mt-4 space-y-2 hidden">
-                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Fișiere pregătite pentru scanare:</h3>
-                        <div id="filesList" class="space-y-1"></div>
-                    </div>
-
-                    <button id="btnAnalyze" disabled class="mt-5 w-full bg-blue-600 text-white font-medium py-3 px-4 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm">
-                        <i data-lucide="cpu"></i> Analizează Documentele cu AI
-                    </button>
+        <div class="grid">
+            <!-- Zona din Stanga -->
+            <div>
+                <div class="upload-section">
+                    <label class="file-input-wrapper">
+                        <strong style="display:block; margin-bottom:8px; color:#1e3a8a;">Pasul 1: Selectează folderul ZIP sau fișierele</strong>
+                        <input type="file" id="fileInput" multiple accept="image/*,.pdf,.zip" style="font-size:14px; cursor:pointer;">
+                    </label>
+                    <div id="fileListDisplay" class="file-list"></div>
                 </div>
 
-                <!-- Spinner Încărcare -->
-                <div id="loadingOverlay" class="hidden bg-white p-12 rounded-2xl shadow-sm border border-gray-100 text-center space-y-4">
-                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
-                    <p class="text-lg font-medium text-gray-700 animate-pulse">AI analizează documentele tale prin GPT-4o...</p>
-                    <p class="text-xs text-gray-500">Această operațiune extrage datele, verifică validitatea și textul din imagini.</p>
+                <button id="btnAnalyze" class="btn">Pasul 2: Analizează Documentele cu GPT-4o Real</button>
+
+                <!-- Status de incarcare -->
+                <div id="loadingOverlay" class="loading">
+                    🔄 AI analizează documentele tale prin serverul local... Vă rugăm așteptați.
                 </div>
 
-                <!-- Tabel Rezultate -->
-                <div id="resultsContainer" class="hidden bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="p-5 border-b border-gray-100">
-                        <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                            <i data-lucide="table" class="text-blue-500"></i> Date Extrase și Analiză Detaliată
-                        </h2>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-gray-50 text-xs font-semibold text-gray-500 border-b border-gray-100 uppercase tracking-wider">
-                                    <th class="p-4">Fișier sursă</th>
-                                    <th class="p-4">Tip document identificat</th>
-                                    <th class="p-4">Status</th>
-                                    <th class="p-4">Valabilitate</th>
-                                    <th class="p-4">Observații AI</th>
-                                </tr>
-                            </thead>
-                            <tbody id="resultsTableBody" class="divide-y divide-gray-100 text-sm"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Recomandări și Plan de Remediere -->
-                <div id="recommendationsContainer" class="hidden bg-yellow-50 border border-yellow-200 p-5 rounded-2xl space-y-3">
-                    <h3 class="font-semibold text-yellow-800 flex items-center gap-2 text-base">
-                        <i data-lucide="alert-triangle"></i> Instrucțiuni de remediere și pași următori:
-                    </h3>
-                    <ul id="recommendationsList" class="list-disc pl-5 text-sm text-yellow-700 space-y-1"></ul>
+                <!-- Tabel Date Extrase -->
+                <div id="resultsContainer" class="results-box">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fișier sursă</th>
+                                <th>Tip identificat de AI</th>
+                                <th>Status</th>
+                                <th>Observații Extrase</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTableBody"></tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- Coloana Dreaptă: Checklist Automat -->
-            <div class="space-y-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
-                        <i data-lucide="clipboard-list" class="text-blue-500"></i> Checklist Dosar Daună
-                    </h2>
-                    <p class="text-xs text-gray-500 mb-4">Verificarea automată a prezenței documentelor necesare</p>
-                    
-                    <div id="checklistItems" class="space-y-3">
-                        <!-- Categoriile de documente vor fi controlate din JS -->
+            <!-- Zona din Dreapta: Checklist fix în text (Hardcoded) -->
+            <div>
+                <div class="checklist">
+                    <h3>Checklist Dosar Daună</h3>
+                    <div id="checklistItems">
+                        <div id="check-buletin" class="check-item"><span>Buletin / Carte de identitate</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-permis_conducere" class="check-item"><span>Permis de conducere</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-talon_auto" class="check-item"><span>Talon auto (Certificat)</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-polita_casco" class="check-item"><span>Poliță CASCO</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-contract_cesiune" class="check-item"><span>Contract cesiune</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-contract_mandat" class="check-item"><span>Contract mandat</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-imputernicire_proprietar" class="check-item"><span>Împuternicire proprietar</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-fotografie_parbriz_avariat" class="check-item"><span>Fotografii parbriz avariat</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-foto_cod_parbriz_avariat" class="check-item"><span>Foto cod parbriz avariat</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-foto_serie_vin" class="check-item"><span>Foto serie VIN (șasiu)</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
+                        <div id="check-foto_parbriz_inlocuit_cu_cod_nou" class="check-item"><span>Foto parbriz înlocuit cod nou</span><span style="font-weight:bold; color:#94a3b8; font-size:14px;">○</span></div>
                     </div>
                 </div>
             </div>
@@ -107,63 +102,52 @@
     </div>
 
     <script>
-        // Configurația documentelor obligatorii
         const REQUIRED_DOCS = {
             "buletin": "Buletin / Carte de identitate",
             "permis_conducere": "Permis de conducere",
-            "talon_auto": "Talon auto (Certificat înmatriculare)",
+            "talon_auto": "Talon auto (Certificat)",
             "polita_casco": "Poliță CASCO",
             "contract_cesiune": "Contract cesiune",
             "contract_mandat": "Contract mandat",
             "imputernicire_proprietar": "Împuternicire proprietar",
             "fotografie_parbriz_avariat": "Fotografii parbriz avariat",
             "foto_cod_parbriz_avariat": "Foto cod parbriz avariat",
-            "foto_serie_vin": "Foto serie VIN (număr șasiu)",
-            "foto_parbriz_inlocuit_cu_cod_nou": "Foto parbriz înlocuit cu cod nou"
+            "foto_serie_vin": "Foto serie VIN (șasiu)",
+            "foto_parbriz_inlocuit_cu_cod_nou": "Foto parbriz înlocuit cod nou"
         };
 
-        let uploadedFiles = [];
-
-        // Inițializare elemente interfață
-        const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
+        const fileListDisplay = document.getElementById('fileListDisplay');
         const btnAnalyze = document.getElementById('btnAnalyze');
-        const selectedFiles = document.getElementById('selectedFiles');
-        const filesList = document.getElementById('filesList');
         const loadingOverlay = document.getElementById('loadingOverlay');
         const resultsContainer = document.getElementById('resultsContainer');
         const resultsTableBody = document.getElementById('resultsTableBody');
-        const statusBanner = document.getElementById('statusBanner');
-        const checklistItems = document.getElementById('checklistItems');
-        const recommendationsContainer = document.getElementById('recommendationsContainer');
-        const recommendationsList = document.getElementById('recommendationsList');
 
-        // Desenează checklist-ul inițial în stare de așteptare
-        function renderInitialChecklist() {
-            checklistItems.innerHTML = '';
-            Object.entries(REQUIRED_DOCS).forEach(([key, val]) => {
-                checklistItems.innerHTML += `
-                    <div id="check-${key}" class="flex items-center justify-between p-3 rounded-xl border border-gray-100 bg-gray-50 text-gray-500">
-                        <span class="text-sm font-medium">${val}</span>
-                        <span class="status-icon"><i data-lucide="circle" class="w-4 h-4 text-gray-400"></i></span>
-                    </div>
-                `;
+        function resetChecklistVisuals() {
+            Object.keys(REQUIRED_DOCS).forEach(key => {
+                const el = document.getElementById(`check-${key}`);
+                if (el) {
+                    el.className = "check-item";
+                    const iconSpan = el.querySelector('span:last-child');
+                    if (iconSpan) {
+                        iconSpan.innerHTML = "○";
+                        iconSpan.style.color = "#94a3b8";
+                    }
+                }
             });
-            lucide.createIcons();
         }
 
-        // Evenimente pentru Selectare Fișiere
-        dropZone.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', handleFilesSelect);
-        
-        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-blue-500', 'bg-blue-50'); });
-        dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-blue-500', 'bg-blue-50'); });
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
-            if(e.dataTransfer.files.length > 0) {
-                fileInput.files = e.dataTransfer.files;
-                handleFilesSelect();
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                fileListDisplay.innerHTML = "<strong>Fișiere pregătite:</strong><br>";
+                Array.from(fileInput.files).forEach(f => {
+                    fileListDisplay.innerHTML += `• ${f.name} (${(f.size / 1024).toFixed(1)} KB)<br>`;
+                });
+                fileListDisplay.style.display = 'block';
+            } else {
+                fileListDisplay.style.display = 'none';
             }
         });
 
+        btnAnalyze.addEventListener('click', async () => {
+            if (fileInput.files.length === 0) { 
